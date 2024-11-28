@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Scraper</title>
+    <link rel = "stylesheet" href = "style.css">
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();  // Prevent the form from submitting the traditional way
+            // Show the loading image
+            document.getElementById('loading').style.display = 'block';  // Corrected this line
+
+            // Use AJAX to submit the form
+            const formData = new FormData(document.getElementById('crawlerForm'));
+            fetch("/", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.text())
+                .then(html => {
+                    // Hide the loading image
+                    document.getElementById('loading').style.display = 'none';
+
+                    // Replace the content with the response
+                    document.body.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+    </script>
+</head>
+<body>
+    
+    <div class = "side-bar">
+        <h2>Setting</h2>
+        
+        <form id = "setting">
+            <h3>Sellers</h3>
+            <label for="amazon">
+                Amazon <input type="checkbox" id="amazon" name="amazon" value="amazon" checked>
+            </label>
+            <label for="bestbuy">
+                BestBuy <input type="checkbox" id="bestbuy" name="bestbuy" value="bestbuy" checked>
+            </label>
+            <label for="costco">
+                Costco &nbsp;&nbsp; <input type="checkbox" id="costco" name="costco" value="costco" checked>
+            </label>
+            <label for="walmart">
+                Walmart <input type="checkbox" id="walmart" name="walmart" value="walmart" checked>
+            </label>
+            <h3>Price Range</h3>
+            <h3>Sorted By</h3>
+        </form>
+    </div>
+    <div class="container">
+        <h1>Global Product searcher</h1>
+        <form id="crawlerForm" , method='POST' onsubmit="submitForm(event)">
+            <input type="text" id="productName" name="name" placeholder="Enter product name" required>
+            <button type="submit" name="submit">Run Crawler
+            </button>
+
+        </form>
+        <img src="{{ url_for('static',filename = 'loading.png') }}" alt="loading" class="loading" id="loading">
+        <div class="grid-container">
+
+            {% for product in products %}
+                <div class="product" id="results">
+                    <p>{{ product[0][:20] }} {{ product[1] }}</p>
+                    <a href="{{ product[3] }}"><img src="{{ product[2] }}" alt="{{ product[0][:20] }}"
+                                                    style="width:200px;height:auto"></a>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+</body>
+</html>
