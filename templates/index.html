@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Scraper</title>
-    <link rel = "stylesheet" href = "style.css">
+    <link rel = "stylesheet" href = "{{ url_for('static', filename='style.css') }}">
+    
 
     <script>
         function submitForm(event) {
             event.preventDefault();  // Prevent the form from submitting the traditional way
             // Show the loading image
             document.getElementById('loading').style.display = 'block';  // Corrected this line
-
+            const minValue = Math.max(0.1, (Math.round(Math.pow(document.getElementById("min-price-range").value, 5) / 10000000000000000 * 100) / 100));
+            const maxValue = Math.max(1, (Math.round(Math.pow(document.getElementById("max-price-range").value, 5) / 10000000000000000 * 100) / 100));
+            const priceOrder = document.getElementById("sort").value
             // Use AJAX to submit the form
             const formData = new FormData(document.getElementById('crawlerForm'));
+            formData.append('min_price', minValue);
+            formData.append('max_price', maxValue);
+            formData.append('price_order', priceOrder);
             fetch("/", {
                 method: "POST",
                 body: formData
@@ -24,13 +30,22 @@
                     document.getElementById('loading').style.display = 'none';
 
                     // Replace the content with the response
-                    document.body.innerHTML = html;
+                    // Parse the response HTML
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    // Update the product grid
+                    const productGrid = document.querySelector('.grid-container');
+                    productGrid.innerHTML = doc.querySelector('.grid-container').innerHTML;
+
+                    // Update the min and max price values
+                    document.getElementById('min-price').textContent = minValue;
+                    document.getElementById('max-price').textContent = maxValue;
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
         }
-
     </script>
 </head>
 <body>
@@ -43,17 +58,32 @@
             <label for="amazon">
                 Amazon <input type="checkbox" id="amazon" name="amazon" value="amazon" checked>
             </label>
+            <br>
             <label for="bestbuy">
                 BestBuy <input type="checkbox" id="bestbuy" name="bestbuy" value="bestbuy" checked>
             </label>
+            <br>
             <label for="costco">
                 Costco &nbsp;&nbsp; <input type="checkbox" id="costco" name="costco" value="costco" checked>
             </label>
+            <br>
             <label for="walmart">
                 Walmart <input type="checkbox" id="walmart" name="walmart" value="walmart" checked>
             </label>
             <h3>Price Range</h3>
+            <label for = "min-price-range">min price: <input type = "range" min = "0.1" max = "9999" value = "0.1" class = "slider" id = "min-price-range"></label>
+            <br>
+            <label for = "max-price-range">max price: <input type = "range" min = "1" max = "10000" value = "10000" class = "slider" id = "max-price-range"></label>
+            <p style = "margin-left: 40px;">Min Price: $<span id = "min-price"></span> </p>
+            <p style = "margin-left: 40px;">Max Price: $<span id = "max-price"></span> </p>
+
             <h3>Sorted By</h3>
+            <label for="sort">Feature by:</label>
+
+            <select name="sort" id="sort">
+                <option value="lth">Price: low-to-high</option>
+                <option value="htl">Price: high-to-low</option>
+            </select>
         </form>
     </div>
     <div class="container">
@@ -70,13 +100,14 @@
             {% for product in products %}
                 <div class="product" id="results">
                     <p>{{ product[0][:20] }} {{ product[1] }}</p>
-                    <a href="{{ product[3] }}"><img src="{{ product[2] }}" alt="{{ product[0][:20] }}"
-                                                    style="width:200px;height:auto"></a>
+                    <a href="{{ product[3] }}" target="_blank"><img src="{{ product[2] }}" alt="{{ product[0][:20] }}"
+                                                    style="height:200px;width:auto;max-width: 400px;"></a>
+                    <p>${{ product[1] }}.99</p>
                 </div>
             {% endfor %}
 
         </div>
     </div>
-
+    <script type = "text/javascript"  src = "{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
