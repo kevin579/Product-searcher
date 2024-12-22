@@ -22,42 +22,47 @@ def askURL(url):
             print(e.reason)
     return html
 
-product = input("Please enter your product: ")
-product = product.replace(" ", "+")
+# product = input("Please enter your product: ")
+# product = product.replace(" ", "+")
+def find_amazon(product):
+    product = product.replace(" ", "+")
+    root_url = "https://www.amazon.ca/s?k="+product
+    # fout = open("projects/applications/Commercial Crawler/source.txt","w",encoding="utf-8")
+    source = askURL(root_url)
+    # fout.write(source)
+    # fout.close()
+    soup = BeautifulSoup(source,"html.parser")
 
-root_url = "https://www.amazon.ca/s?k="+product
-fout = open("projects/applications/Commercial Crawler/source.txt","w",encoding="utf-8")
-source = askURL(root_url)
-fout.write(source)
-fout.close()
-soup = BeautifulSoup(source,"html.parser")
 
-
-product_divs = soup.select('div.rush-component.s-featured-result-item.s-expand-height, div.sg-col-4-of-24.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.s-widget-spacing-small.sg-col-4-of-20')
-products = {}
-print(len(product_divs))
-for div in product_divs:
-    link_elem = div.find('a', class_="a-link-normal s-no-outline")
-    link = "https://www.amazon.ca" + link_elem['href'] if link_elem else "N/A"
-    
-    price_elem = div.find('span', class_="a-price-whole")
-    price = price_elem.text.strip() if price_elem else "N/A"
+    product_divs = soup.select('div.rush-component.s-featured-result-item.s-expand-height, div.sg-col-4-of-24.sg-col-4-of-12.s-result-item.s-asin.sg-col-4-of-16.sg-col.s-widget-spacing-small.sg-col-4-of-20')
+    products = []
+    # print(len(product_divs))
+    for div in product_divs:
+        link_elem = div.find('a', class_="a-link-normal s-no-outline")
+        link = "https://www.amazon.ca" + link_elem['href'] if link_elem else "N/A"
         
-    # Find the image URL
-    img_elem = div.find('img', class_="s-image")
-    if img_elem:
-        img_url = img_elem['src']
-        name = img_elem['alt']
-    else:
-        img_url = "N/A"
-        name = "N/A"
-        
-    # Add to the dictionary
-    products[name] = [price, img_url, link]
+        price_elem = div.find('span', class_="a-price-whole")
+        price = price_elem.text.strip() if price_elem else "N/A"
+            
+        # Find the image URL
+        img_elem = div.find('img', class_="s-image")
+        if img_elem:
+            img_url = img_elem['src']
+            name = img_elem['alt']
+        else:
+            img_url = "N/A"
+            name = "N/A"
+            
+        # Add to the dictionary
+        if name[:9] == "Sponsored":
+            continue
+        if name != "N/A" and price != "N/A" and img_url != "N/A" and link != "N/A":
+            products.append([name, price, img_url, link, "amazon"])
 
-print(len(products))
-print(products)      
+    # print(len(products))
+    # print(products)      
+    return products
 
-
+print(find_amazon("iphone 15"))
 
 
