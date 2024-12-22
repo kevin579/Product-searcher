@@ -14,12 +14,20 @@
             document.getElementById('loading').style.display = 'block';  // Corrected this line
             const minValue = Math.max(0.1, (Math.round(Math.pow(document.getElementById("min-price-range").value, 5) / 10000000000000000 * 100) / 100));
             const maxValue = Math.max(1, (Math.round(Math.pow(document.getElementById("max-price-range").value, 5) / 10000000000000000 * 100) / 100));
-            const priceOrder = document.getElementById("sort").value
+            const priceOrder = document.getElementById("sort").value;
+            const amazon = document.getElementById("amazon").checked;
+            const bestbuy = document.getElementById("bestbuy").checked;
+            const costco = document.getElementById("costco").checked;
+            const walmart = document.getElementById("walmart").checked;
             // Use AJAX to submit the form
             const formData = new FormData(document.getElementById('crawlerForm'));
             formData.append('min_price', minValue);
             formData.append('max_price', maxValue);
             formData.append('price_order', priceOrder);
+            formData.append('amazon',amazon);
+            formData.append('bestbuy',bestbuy);
+            formData.append('costco',costco);
+            formData.append('walmart',walmart);
             fetch("/", {
                 method: "POST",
                 body: formData
@@ -55,37 +63,44 @@
         
         <form id = "setting">
             <h3>Sellers</h3>
-            <label for="amazon">
+            <label for="amazon" class = "seller-container">
                 Amazon <input type="checkbox" id="amazon" name="amazon" value="amazon" checked>
+                <span class="checkmark"></span>
             </label>
             <br>
-            <label for="bestbuy">
+            <label for="bestbuy" class = "seller-container">
                 BestBuy <input type="checkbox" id="bestbuy" name="bestbuy" value="bestbuy" checked>
+                <span class="checkmark"></span>
             </label>
             <br>
-            <label for="costco">
+            <label for="costco" class = "seller-container">
                 Costco &nbsp;&nbsp; <input type="checkbox" id="costco" name="costco" value="costco" checked>
+                <span class="checkmark"></span>
             </label>
             <br>
-            <label for="walmart">
+            <label for="walmart" class = "seller-container">
                 Walmart <input type="checkbox" id="walmart" name="walmart" value="walmart" checked>
+                <span class="checkmark"></span>
             </label>
             <h3>Price Range</h3>
-            <label for = "min-price-range">min price: <input type = "range" min = "0.1" max = "9999" value = "0.1" class = "slider" id = "min-price-range"></label>
-            <br>
-            <label for = "max-price-range">max price: <input type = "range" min = "1" max = "10000" value = "10000" class = "slider" id = "max-price-range"></label>
-            <p style = "margin-left: 40px;">Min Price: $<span id = "min-price"></span> </p>
-            <p style = "margin-left: 40px;">Max Price: $<span id = "max-price"></span> </p>
-
+            <div class = "slidecontainer">
+                <label for = "min-price-range">Min price: <input type = "range" min = "0.1" max = "9999" value = "0.1" class = "slider" id = "min-price-range"></label>
+                <label for = "max-price-range">Max price: <input type = "range" min = "1" max = "10000" value = "10000" class = "slider" id = "max-price-range"></label>
+                <!-- <p style = "margin-left: 40px;">Min Price: $<span id = "min-price"></span> </p>
+                <p style = "margin-left: 40px;">Max Price: $<span id = "max-price"></span> </p> -->
+                <p style = "margin-left: 40px;">Price Range: $<span id = "min-price"></span>-<span id = "max-price"></span> </p>
+            </div>
             <h3>Sorted By</h3>
-            <label for="sort">Feature by:</label>
-
-            <select name="sort" id="sort">
-                <option value="lth">Price: low-to-high</option>
-                <option value="htl">Price: high-to-low</option>
-            </select>
+            <div name="sort" class = "custom-select" style = "width:200px;">
+                <select id="sort" >
+                    <option value="lth">Price: low-to-high</option>
+                    <option value="lth">Price: low-to-high</option>
+                    <option value="htl">Price: high-to-low</option>
+                </select>
+            </div>
         </form>
     </div>
+
     <div class="container">
         <h1>Global Product searcher</h1>
         <form id="crawlerForm" , method='POST' onsubmit="submitForm(event)">
@@ -99,10 +114,11 @@
 
             {% for product in products %}
                 <div class="product" id="results">
-                    <p>{{ product[0][:20] }} {{ product[1] }}</p>
+                    <p style = "font-size: 22px;"><strong>{{ product[0][:20] }}</strong></p>
                     <a href="{{ product[3] }}" target="_blank"><img src="{{ product[2] }}" alt="{{ product[0][:20] }}"
-                                                    style="height:200px;width:auto;max-width: 400px;"></a>
+                                                    style="height:150px;width:auto;max-width: 300px;"></a>
                     <p>${{ product[1] }}.99</p>
+                    <p>From {{ product[4] }}</p>
                 </div>
             {% endfor %}
 

@@ -44,6 +44,7 @@ def crawl(product):
     product1 = product.replace(" ", "+")
 
     root_url = "https://www.amazon.ca/s?k="+product1
+    print(root_url)
     source = askURL(root_url)
     soup = BeautifulSoup(source,"html.parser")
 
@@ -66,7 +67,7 @@ def crawl(product):
             img_url = "N/A"
             name = "N/A"
         if name!="N/A" and price!="N/A" and img_url!="N/A" and link!="N/A":
-            products.append([name,price, img_url, link])
+            products.append([name,price, img_url, link,"amazon"])
 
         
 
@@ -80,7 +81,7 @@ def crawl(product):
 
     for p in data['products']:
         if p['name'] != "N/A" and p['salePrice'] != "N/A" and p['thumbnailImage'] != "N/A" and p['productUrl'] != "N/A":
-            products.append([p['name'],extract_integer(p['salePrice']),p['thumbnailImage'],"https://www.bestbuy.ca/" + p['productUrl']])
+            products.append([p['name'],extract_integer(p['salePrice']),p['thumbnailImage'],"https://www.bestbuy.ca/" + p['productUrl'],"bestbuy"])
 
 
     product3 = product.replace(" ", "+")
@@ -107,7 +108,7 @@ def crawl(product):
                 name = img_elem['alt']
 
         # if name != "N/A" and price != "N/A" and img_url != "N/A" and link != "N/A":
-        products.append([name,extract_integer(price), img_url, link])
+        products.append([name,extract_integer(price), img_url, link,"costco"])
 
     
 
@@ -134,8 +135,8 @@ def crawl(product):
             
         # Add to the dictionary
         # if name != "N/A" and price != "N/A" and img_url != "N/A" and link != "N/A":
-        products.append([name,extract_integer(price), img_url, link])
+        products.append([name,extract_integer(price), img_url, link,"walmart"])
 
-    print(products)
+    # print(products)
     return products
 
