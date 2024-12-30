@@ -1,4 +1,9 @@
 from flask import Flask, jsonify,render_template,request,make_response,json
+# from crawler_total import crawl
+from amazon import find_amazon
+from bestbuy import find_bestbuy
+from costco import find_costco
+from walmart import find_walmart
 from crawler_total import crawl
 import mysql.connector
 
@@ -61,14 +66,63 @@ def index():
         costco = request.form.get("costco","false")
         walmart = request.form.get("walmart","false")
         sellers = []
+        products = []
+        data = read(database, f"""Select count(*) from information_schema.tables where table_schema = Database() and table_name = '{key_name}';""")
+        if not data[0][0]:
+            add_table = f"""create table {key_name} (
+                name varchar(200),
+                price int,
+                link varchar(1000),
+                image varchar(1000),
+                seller varchar(10)
+                )
+                """
+            execute(database, add_table)
         if amazon == "true":
             sellers.append("amazon")
+            amazon_has_products = read(database, f"select * from amazon where product = '{key_name}'")
+            if amazon_has_products:
+                amazon_products = read(database, f"select * from {key_name} where seller = 'amazon'")
+            else:
+                amazon_products = find_amazon(name)
+                execute(database,f"insert into amazon values ('{key_name}')")
+                for product in amazon_products:
+                    insert_product(database, key_name, product)
+            products.extend(amazon_products)
+
         if bestbuy == "true":
             sellers.append("bestbuy")
+            bestbuy_has_products = read(database, f"select * from bestbuy where product = '{key_name}'")
+            if bestbuy_has_products:
+                bestbuy_products = read(database, f"select * from {key_name} where seller = 'bestbuy'")
+            else:
+                bestbuy_products = find_bestbuy(name)
+                execute(database,f"insert into bestbuy values ('{key_name}')")
+                for product in bestbuy_products:
+                    insert_product(database, key_name, product)
+            products.extend(bestbuy_products)
         if costco == "true":
             sellers.append("costco")
+            costco_has_products = read(database, f"select * from costco where product = '{key_name}'")
+            if costco_has_products:
+                costco_products = read(database, f"select * from {key_name} where seller = 'costco'")
+            else:
+                costco_products = find_costco(name)
+                execute(database,f"insert into costco values ('{key_name}')")
+                for product in costco_products:
+                    insert_product(database, key_name, product)
+            products.extend(costco_products)
         if walmart == "true":
             sellers.append("walmart")
+            walmart_has_products = read(database, f"select * from walmart where product = '{key_name}'")
+            if walmart_has_products:
+                walmart_products = read(database, f"select * from {key_name} where seller = 'walmart'")
+            else:
+                walmart_products = find_walmart(name)
+                execute(database,f"insert into walmart values ('{key_name}')")
+                for product in walmart_products:
+                    insert_product(database, key_name, product)
+            products.extend(walmart_products)
 
         x = read(database, f"""Select count(*) from information_schema.tables where table_schema = Database() and table_name = '{key_name}';""")
         if x[0][0]:

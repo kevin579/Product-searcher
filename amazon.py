@@ -63,6 +63,5 @@ def find_amazon(product):
     # print(products)      
     return products
 
-print(find_amazon("iphone 15"))
 
 

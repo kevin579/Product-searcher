@@ -38,11 +38,14 @@ def find_walmart(product):
     products = []
     # print(product_divs)
     for div in product_divs:
-        link_elem = div.find('a', class_="absolute w-100 h-100 z-1 hide-sibling-opacity")
+        link_elem = div.find('a', {'link-identifier': True})
+        # link_elem = link_elem.find('a', class_="absolute w-100 h-100 z-1 hide-sibling-opacity")
         link = "https://www.walmart.ca" + link_elem['href'] if link_elem else "N/A"
-        
-        price_elem = div.find('span', class_="w_q67L")
-        price = price_elem.text.strip() if price_elem else "N/A"
+
+
+        price_elem = div.find('div', {'data-automation-id': 'product-price'})
+        price_elem = price_elem.find('span', class_="w_q67L")
+        price = price_elem.text.strip()[15:] if price_elem else "N/A"
             
     #     # Find the image URL
         img_elem = div.find('img', class_="absolute top-0 left-0")
@@ -54,13 +57,13 @@ def find_walmart(product):
             name = "N/A"
             
         # Add to the dictionary
-        if name != "N/A" and price != "N/A" and img_url != "N/A" and link != "N/A":
-            products.append([name, price, img_url, link, "walmart"])
+        # if name != "N/A" and price != "N/A" and img_url != "N/A" and link != "N/A":
+        products.append([name, price, img_url, link, "walmart"])
 
-    # print(len(products))
+    print(len(products))
     return products
 
-print(find_walmart("iphone 15"))      
+# print(find_walmart("game laptop"))      
 
 
 

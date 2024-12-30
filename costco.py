@@ -104,3 +104,4 @@ def find_costco(name):
 
     return products
 
+# print(find_costco("Macbook"))
