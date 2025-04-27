@@ -44,7 +44,6 @@ def crawl(product):
     product1 = product.replace(" ", "+")
 
     root_url = "https://www.amazon.ca/s?k="+product1
-    print(root_url)
     source = askURL(root_url)
     soup = BeautifulSoup(source,"html.parser")
 
@@ -69,6 +68,7 @@ def crawl(product):
         if name!="N/A" and price!="N/A" and img_url!="N/A" and link!="N/A":
             products.append([name,price, img_url, link,"amazon"])
 
+    print("amazon done")
         
 
 
@@ -83,35 +83,37 @@ def crawl(product):
         if p['name'] != "N/A" and p['salePrice'] != "N/A" and p['thumbnailImage'] != "N/A" and p['productUrl'] != "N/A":
             products.append([p['name'],extract_integer(p['salePrice']),p['thumbnailImage'],"https://www.bestbuy.ca/" + p['productUrl'],"bestbuy"])
 
+    print("bestbuy done")
 
-    product3 = product.replace(" ", "+")
-    root_url = "https://www.costco.ca/CatalogSearch?dept=All&keyword="+product3
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-    r = requests.get(root_url,headers=headers,timeout=30)
-    soup = BeautifulSoup(r.text,"html.parser")
-    product_divs = soup.findAll('div',class_='thumbnail')
-    for div in product_divs:
-        link_elem = div.find('a', class_="product-image-url")
-        link = link_elem['href'] if link_elem else "N/A"
+
+    # product3 = product.replace(" ", "+")
+    # root_url = "https://www.costco.ca/CatalogSearch?dept=All&keyword="+product3
+    # headers = {
+    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    # }
+    # r = requests.get(root_url,headers=headers,timeout=30)
+    # soup = BeautifulSoup(r.text,"html.parser")
+    # product_divs = soup.findAll('div',class_='thumbnail')
+    # for div in product_divs:
+    #     link_elem = div.find('a', class_="product-image-url")
+    #     link = link_elem['href'] if link_elem else "N/A"
         
-        price_elem = div.find('div', class_="price")
-        price = price_elem.text.strip() if price_elem else "N/A"
+    #     price_elem = div.find('div', class_="price")
+    #     price = price_elem.text.strip() if price_elem else "N/A"
             
-        img_elem = div.find('img', class_="img-responsive")
-        img_url = "N/A"
-        name = "N/A"
-        if img_elem:
-            if "src" in img_elem.attrs:
-                img_url = img_elem['src']
-                name = img_elem['alt']
+    #     img_elem = div.find('img', class_="img-responsive")
+    #     img_url = "N/A"
+    #     name = "N/A"
+    #     if img_elem:
+    #         if "src" in img_elem.attrs:
+    #             img_url = img_elem['src']
+    #             name = img_elem['alt']
 
-        # if name != "N/A" and price != "N/A" and img_url != "N/A" and link != "N/A":
-        products.append([name,extract_integer(price), img_url, link,"costco"])
+    #     # if name != "N/A" and price != "N/A" and img_url != "N/A" and link != "N/A":
+    #     products.append([name,extract_integer(price), img_url, link,"costco"])
 
     
-
+    # print("costco done")
     product4 = product.replace(" ", "+")
 
     root_url = "https://www.walmart.ca/en/search?q="+product4
@@ -137,6 +139,6 @@ def crawl(product):
         # if name != "N/A" and price != "N/A" and img_url != "N/A" and link != "N/A":
         products.append([name,extract_integer(price), img_url, link,"walmart"])
 
-    # print(products)
+    print("walmart done")
     return products
 

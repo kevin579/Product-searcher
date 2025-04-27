@@ -103,5 +103,6 @@ def find_costco(name):
                 products.append([name,extract_integer(price), img_url, link,"costco"])
 
     return products
-
+# print("hell")
 # print(find_costco("Macbook"))
+# print("o")
