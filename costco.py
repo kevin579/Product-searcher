@@ -66,6 +66,7 @@ def extract_integer(s):
 
 def find_costco(name):
     products = []
+    return products
     data = fetch_pre_loaded(name)
     
     if data:
@@ -82,7 +83,9 @@ def find_costco(name):
         headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
+        print("got")
         r = requests.get(root_url,headers=headers,timeout=30)
+        print("got")
         soup = BeautifulSoup(r.text,"html.parser")
         product_divs = soup.findAll('div',class_='thumbnail')
         for div in product_divs:
@@ -104,5 +107,4 @@ def find_costco(name):
 
     return products
 # print("hell")
-# print(find_costco("Macbook"))
 # print("o")
