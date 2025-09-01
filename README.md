@@ -1,36 +1,42 @@
 # 🛒 SmartShopper – Product Search & Comparison
 
 SmartShopper is a **Python + Flask** web app with a simple **HTML5** frontend.  
-Too many shopping websites and you don't know where to go?
-Lots of similar products and hard to determine which one to get?
-Got a favourde item and wanna know who sells the chepeast?
-Enter a product name once, and **SmartShopper** will **scrapes multiple mainstream shopping sites**, compares results, and returns the **best-matched product for you**—no need to open individual listings.
+
+Too many shopping websites and don’t know where to go?  
+Lots of similar products and hard to decide which one to get?  
+Have a favorite item and want to know who sells it cheapest?  
+
+Enter a product name once, and **SmartShopper** will **scrape multiple mainstream shopping sites**, compare results, and return the **best-matched product for you** — no need to open individual listings.
 
 ---
 
 ## ✨ Features
-- 🔎 **Unified search** across several e-commerce sites
-- 🧭 **Customize choice** will only search on websites that you like
-- icon **Abundant ranking** title match, price sanity, top ranking, availability
-- ⚡ **Fast HTML parsing** with requests + BeautifulSoup and lazy loading, reduce 60% searching time
-- 🧱 **Clean HTML5 UI** Easy to operate an user friendly
+- 🔎 **Unified search** — find products across multiple e-commerce sites with a single query  
+- ⚙️ **Customizable sources** — search only on the websites you trust  
+- 📊 **Smart ranking** — considers title match, price sanity, top rating, and availability  
+- ⚡ **Fast search** — optimized scraping with `requests` + `BeautifulSoup` and lazy loading (up to 60% faster)  
+- 🖥️ **Clean HTML5 UI** — simple, user-friendly interface  
 
 ---
 
 ## 🧰 Tech Stack
-- **Backend:** Python 3.11 + · Flask
-- **Frontend:** HTML5 + Javascript + CSS
-- **Scraping:** `requests`, `beautifulsoup4`
-- **Database:** `MySQL`
+- **Backend:** Python 3.11 · Flask  
+- **Frontend:** HTML5 · CSS · JavaScript  
+- **Database:** MySQL — stores product data, cached results, and user history  
+- **Security:** Flask-Session — secure session management and state handling  
+- **Scraping:** `requests`, `beautifulsoup4`  
 
 ---
 
-## 🔎 Supported Websites 
-- **Amazon:** checkmark
-- **Costco:** checkmark
-- **Bestbuy:** checkmark
-- **Walmart:** checkmark
-- **Canadian  Tires** In process
-- **eBay** In process
+## 🔎 Supported Websites
+- ✅ **Amazon**  
+- ✅ **Costco**  
+- ✅ **Best Buy**  
+- ✅ **Walmart**  
+- 🔄 **Canadian Tire** (in progress)  
+- 🔄 **eBay** (in progress)  
 
-This project is for educational and personal use.
+---
+
+## ⚠️ Disclaimer
+This project is for **educational and personal use only**. Please respect the Terms of Service of all target websites before using in production.
