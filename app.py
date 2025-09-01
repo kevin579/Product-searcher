@@ -1,9 +1,9 @@
 from flask import Flask, jsonify,render_template,request,make_response,json
 import re
-from amazon import find_amazon
-from bestbuy import find_bestbuy
-from costco import find_costco
-from walmart import find_walmart
+from scrapers.amazon import find_amazon
+from scrapers.bestbuy import find_bestbuy
+from scrapers.costco import find_costco
+from scrapers.walmart import find_walmart
 from crawler_total import crawl
 from database import *
 from file import *
