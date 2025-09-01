@@ -5,9 +5,12 @@ from bs4 import BeautifulSoup
 import io
 import json
 
+# This files works as a backup for the individule scrapers, as the shopping websites regularly changes their searching algrithm.
+# Ensures the functionality of the app
 
 
 def askURL(url):
+
     head = {  
         "User-Agent": "Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 80.0.3987.122  Safari / 537.36"
     }
@@ -86,34 +89,35 @@ def crawl(product):
     print("bestbuy done")
 
 
-    # product3 = product.replace(" ", "+")
-    # root_url = "https://www.costco.ca/CatalogSearch?dept=All&keyword="+product3
-    # headers = {
-    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    # }
-    # r = requests.get(root_url,headers=headers,timeout=30)
-    # soup = BeautifulSoup(r.text,"html.parser")
-    # product_divs = soup.findAll('div',class_='thumbnail')
-    # for div in product_divs:
-    #     link_elem = div.find('a', class_="product-image-url")
-    #     link = link_elem['href'] if link_elem else "N/A"
+    product3 = product.replace(" ", "+")
+    root_url = "https://www.costco.ca/CatalogSearch?dept=All&keyword="+product3
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    r = requests.get(root_url,headers=headers,timeout=30)
+    soup = BeautifulSoup(r.text,"html.parser")
+    product_divs = soup.findAll('div',class_='thumbnail')
+    for div in product_divs:
+        link_elem = div.find('a', class_="product-image-url")
+        link = link_elem['href'] if link_elem else "N/A"
         
-    #     price_elem = div.find('div', class_="price")
-    #     price = price_elem.text.strip() if price_elem else "N/A"
+        price_elem = div.find('div', class_="price")
+        price = price_elem.text.strip() if price_elem else "N/A"
             
-    #     img_elem = div.find('img', class_="img-responsive")
-    #     img_url = "N/A"
-    #     name = "N/A"
-    #     if img_elem:
-    #         if "src" in img_elem.attrs:
-    #             img_url = img_elem['src']
-    #             name = img_elem['alt']
+        img_elem = div.find('img', class_="img-responsive")
+        img_url = "N/A"
+        name = "N/A"
+        if img_elem:
+            if "src" in img_elem.attrs:
+                img_url = img_elem['src']
+                name = img_elem['alt']
 
-    #     # if name != "N/A" and price != "N/A" and img_url != "N/A" and link != "N/A":
-    #     products.append([name,extract_integer(price), img_url, link,"costco"])
+        # if name != "N/A" and price != "N/A" and img_url != "N/A" and link != "N/A":
+        products.append([name,extract_integer(price), img_url, link,"costco"])
 
     
-    # print("costco done")
+    print("costco done")
+
     product4 = product.replace(" ", "+")
 
     root_url = "https://www.walmart.ca/en/search?q="+product4
