@@ -1,3 +1,6 @@
+#This files serves as a backup for thoose who doens't have acesss to the database
+#Use txt file instead of mySQL db to store data
+
 def read_file(name, seller):
     """
     Read product data for a specific seller from a text file.
